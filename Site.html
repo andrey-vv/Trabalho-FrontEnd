@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <!-- Configuração de viewport para garantir que o site seja responsivo em celulares, tablets e computadores -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espaço Calmo - Apoio e Acessibilidade TEA</title>
+    
+    <!-- Importação do Tailwind CSS via CDN para estilização rápida, limpa e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Importação da fonte 'Inter' e 'Nunito' (fontes sem serifa de alta legibilidade recomendadas para neurodivergentes) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@600;700&display=swap" rel="stylesheet">
+
+    <!-- Configurações personalizadas do Tailwind e CSS para conforto sensorial -->
+    <style>
+        /* Variáveis de cores suaves (tons pastéis e neutros) para evitar sobrecarga sensorial */
+        :root {
+            --bg-principal: #F4F7F6;      /* Cinza esverdeado muito claro e suave */
+            --bg-cartao: #FFFFFF;         /* Branco puro para contraste limpo */
+            --texto-principal: #2D3748;   /* Cinza chumbo suave (menos agressivo que preto puro) */
+            --texto-secundario: #4A5568;  /* Cinza médio legível */
+            --cor-primaria: #4A90E2;      /* Azul calmo */
+            --cor-primaria-suave: #EBF4FF;/* Azul pastel de fundo */
+            --cor-secundaria: #48BB78;    /* Verde menta calmo */
+            --cor-secundaria-suave: #E6FFFA; /* Verde menta pastel */
+            --borda-suave: #CBD5E0;       /* Borda discreta */
+            --tamanho-fonte-base: 16px;   /* Tamanho base controlável pelo usuário */
+        }
+
+        /* Tema Escuro Suave / Alto Contraste Confortável (ativado via botão de acessibilidade) */
+        html.modo-escuro {
+            --bg-principal: #1A202C;      /* Azul marinho muito escuro e fosco */
+            --bg-cartao: #2D3748;         /* Cinza azulado escuro */
+            --texto-principal: #F7FAFC;   /* Branco gelo suave */
+            --texto-secundario: #CBD5E0;  /* Cinza claro */
+            --cor-primaria: #63B3ED;      /* Azul claro luminoso */
+            --cor-primaria-suave: #2C5282;/* Azul escuro suave */
+            --cor-secundaria: #68D391;    /* Verde menta claro */
+            --cor-secundaria-suave: #234E52; /* Verde escuro suave */
+            --borda-suave: #4A5568;
+        }
+
+        /* Aplicação do tamanho de fonte dinâmico no elemento raiz */
+        html {
+            font-size: var(--tamanho-fonte-base);
+            scroll-behavior: smooth;
+        }
+
+        /* Estilização base do corpo da página */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Títulos com fonte arredondada e amigável */
+        h1, h2, h3 {
+            font-family: 'Nunito', sans-serif;
+        }
+
+        /* Classes utilitárias conectadas às variáveis CSS */
+        .cartao-sensorial {
+            background-color: var(--bg-cartao);
+            border: 2px solid var(--borda-suave);
+            transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.3s ease;
+        }
+
+        .cartao-sensorial:hover, .cartao-sensorial:focus-visible {
+            border-color: var(--cor-primaria);
+            transform: translateY(-2px);
+            outline: none;
+        }
+
+        /* Classe para desativar TODAS as animações e transições (Acessibilidade Motora/Sensorial) */
+        html.sem-animacoes *,
+        html.sem-animacoes *::before,
+        html.sem-animacoes *::after {
+            transition: none !important;
+            animation: none !important;
+            scroll-behavior: auto !important;
+        }
+
+        /* Estilo do círculo de respiração na seção de Pausa Sensorial */
+        .circulo-respiracao {
+            width: 140px;
+            height: 140px;
+            border-radius: 9999px;
+            background-color: var(--cor-primaria-suave);
+            border: 4px solid var(--cor-primaria);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            transition: transform 4s ease-in-out, background-color 4s ease-in-out;
+        }
+
+        /* Estados da respiração guiada */
+        .circulo-respiracao.inspirar {
+            transform: scale(1.35);
+            background-color: var(--cor-secundaria-suave);
+            border-color: var(--cor-secundaria);
+        }
+
+        .circulo-respiracao.segurar {
+            transform: scale(1.35);
+        }
+
+        .circulo-respiracao.expirar {
+            transform: scale(1);
+            background-color: var(--cor-primaria-suave);
+            border-color: var(--cor-primaria);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- =====================================================================
+         1. BARRA SUPERIOR DE ACESSIBILIDADE
+         Permite adaptar o ambiente visual às necessidades sensoriais do usuário
+         ===================================================================== -->
+    <header class="sticky top-0 z-50 border-b-2 shadow-sm" style="background-color: var(--bg-cartao); border-color: var(--borda-suave);">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            
+            <!-- Identificação do Site -->
+            <div class="flex items-center gap-2">
+                <!-- Ícone SVG simples de infinito/acolhimento -->
+                <svg class="w-8 h-8" style="color: var(--cor-primaria);" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.74-8z" />
+                </svg>
+                <span class="font-bold text-lg tracking-tight">Espaço Calmo</span>
+            </div>
+
+            <!-- Controles de Acessibilidade -->
+            <nav aria-label="Controles de Acessibilidade" class="flex flex-wrap items-center gap-2">
+                
+                <!-- Botão 1: Alternar Modo Escuro Suave / Alto Contraste -->
+                <button id="btn-tema" type="button" 
+                        class="px-3 py-2 rounded-xl border-2 text-sm font-semibold flex items-center gap-2 cursor-pointer focus:ring-2 focus:ring-blue-400"
+                        style="border-color: var(--borda-suave); background-color: var(--bg-principal);"
+                        aria-pressed="false">
+                    <span id="icone-tema" aria-hidden="true">🌙</span>
+                    <span id="texto-tema">Modo Escuro</span>
+                </button>
+
+                <!-- Botão 2: Diminuir e Aumentar Tamanho da Fonte -->
+                <div class="flex items-center rounded-xl border-2 overflow-hidden" style="border-color: var(--borda-suave); background-color: var(--bg-principal);">
+                    <button id="btn-diminuir-fonte" type="button" 
+                            class="px-3 py-2 text-sm font-bold hover:opacity-80 cursor-pointer border-r"
+                            style="border-color: var(--borda-suave);"
+                            title="Diminuir tamanho do texto"
+                            aria-label="Diminuir tamanho do texto">
+                        A-
+                    </button>
+                    <button id="btn-aumentar-fonte" type="button" 
+                            class="px-3 py-2 text-sm font-bold hover:opacity-80 cursor-pointer"
+                            title="Aumentar tamanho do texto"
+                            aria-label="Aumentar tamanho do texto">
+                        A+
+                    </button>
+                </div>
+
+                <!-- Botão 3: Desativar Animações e Transições -->
+                <button id="btn-animacoes" type="button" 
+                        class="px-3 py-2 rounded-xl border-2 text-sm font-semibold flex items-center gap-2 cursor-pointer focus:ring-2 focus:ring-blue-400"
+                        style="border-color: var(--borda-suave); background-color: var(--bg-principal);"
+                        aria-pressed="false">
+                    <span aria-hidden="true">⏸️</span>
+                    <span id="texto-animacoes">Pausar Animações</span>
+                </button>
+
+            </nav>
+        </div>
+    </header>
+
+    <!-- =====================================================================
+         CONTEÚDO PRINCIPAL (Estruturado em blocos previsíveis e espaçados)
+         ===================================================================== -->
+    <main class="flex-grow max-w-5xl w-full mx-auto px-4 py-8 space-y-12">
+
+        <!-- =================================================================
+             2. SEÇÃO DE BOAS-VINDAS
+             Explica de forma clara e direta o propósito do site
+             ================================================================= -->
+        <section aria-labelledby="titulo-boas-vindas" class="rounded-2xl p-6 md:p-8 border-2 shadow-sm" style="background-color: var(--bg-cartao); border-color: var(--borda-suave);">
+            <div class="max-w-3xl">
+                <span class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-3" style="background-color: var(--cor-primaria-suave); color: var(--cor-primaria);">
+                    Apoio e Inclusão • TEA
+                </span>
+                <h1 id="titulo-boas-vindas" class="text-2xl md:text-3xl font-bold mb-4">
+                    Bem-vindo ao Espaço Calmo
+                </h1>
+                <p class="text-base md:text-lg mb-4" style="color: var(--texto-secundario);">
+                    Este site foi criado para oferecer um ambiente digital seguro, previsível e confortável para pessoas com <strong>Transtorno do Espectro Autista (TEA)</strong>.
+                </p>
+                <p class="text-base" style="color: var(--texto-secundario);">
+                    Aqui você encontra ferramentas práticas para ajudar na comunicação do dia a dia, organizar sua rotina de forma visual e fazer uma pausa tranquila sempre que precisar.
+                </p>
+            </div>
+
+            <!-- Menu de Navegação Rápida Interna -->
+            <div class="mt-6 pt-6 border-t flex flex-wrap gap-3" style="border-color: var(--borda-suave);">
+                <a href="#secao-comunicacao" class="px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors" style="background-color: var(--cor-primaria-suave); color: var(--cor-primaria);">
+                    1. Quadro de Comunicação
+                </a>
+                <a href="#secao-rotina" class="px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors" style="background-color: var(--cor-secundaria-suave); color: var(--cor-secundaria);">
+                    2. Rotina Diária
+                </a>
+                <a href="#secao-pausa" class="px-4 py-2.5 rounded-xl font-semibold text-sm border" style="border-color: var(--borda-suave);">
+                    3. Pausa Sensorial
+                </a>
+            </div>
+        </section>
+
+        <!-- =================================================================
+             3. QUADRO DE COMUNICAÇÃO ALTERNATIVA (CAA)
+             Cartões grandes com ícones claros que falam a frase em voz alta
+             ================================================================= -->
+        <section id="secao-comunicacao" aria-labelledby="titulo-caa" class="space-y-6">
+            <div>
+                <h2 id="titulo-caa" class="text-2xl font-bold mb-2">
+                    Quadro de Comunicação Alternativa (CAA)
+                </h2>
+                <p style="color: var(--texto-secundario);">
+                    Toque ou clique em um cartão abaixo para mostrar e ouvir a frase em voz alta.
+                </p>
+            </div>
+
+            <!-- Visor de Destaque da Frase Selecionada -->
+            <div id="visor-caa" role="status" aria-live="polite" 
+                 class="rounded-2xl p-6 border-2 flex flex-col sm:flex-row items-center justify-between gap-4 min-h-[100px]"
+                 style="background-color: var(--cor-primaria-suave); border-color: var(--cor-primaria);">
+                <div class="flex items-center gap-4 text-center sm:text-left">
+                    <span id="visor-icone" class="text-4xl" aria-hidden="true">💬</span>
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider block opacity-75">Frase Selecionada:</span>
+                        <p id="visor-texto" class="text-xl md:text-2xl font-bold">
+                            Selecione um cartão abaixo...
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Botão para repetir o áudio da frase atual -->
+                <button id="btn-repetir-fala" type="button" disabled
+                        class="px-4 py-2.5 rounded-xl font-semibold text-sm text-white flex items-center gap-2 disabled:opacity-40 cursor-pointer"
+                        style="background-color: var(--cor-primaria);">
+                    <span aria-hidden="true">🔊</span>
+                    <span>Ouvir Novamente</span>
+                </button>
+            </div>
+
+            <!-- Grade de Cartões de Comunicação -->
+            <div id="grade-cartoes-caa" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <!-- Os cartões são gerados via JavaScript para manter o código limpo e fácil de expandir -->
+            </div>
+        </section>
+
+        <!-- =================================================================
+             4. ROTINA DIÁRIA INTERATIVA
+             Ajuda na previsibilidade do dia com marcação visual calma
+             ================================================================= -->
+        <section id="secao-rotina" aria-labelledby="titulo-rotina" class="rounded-2xl p-6 md:p-8 border-2 shadow-sm space-y-6" style="background-color: var(--bg-cartao); border-color: var(--borda-suave);">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h2 id="titulo-rotina" class="text-2xl font-bold mb-1">
+                        Minha Rotina Diária
+                    </h2>
+                    <p style="color: var(--texto-secundario);">
+                        Marque as atividades conforme você for concluindo ao longo do dia.
+                    </p>
+                </div>
+
+                <!-- Botão para reiniciar a rotina do dia -->
+                <button id="btn-reiniciar-rotina" type="button" 
+                        class="px-4 py-2 rounded-xl border-2 text-sm font-semibold cursor-pointer hover:opacity-80"
+                        style="border-color: var(--borda-suave); background-color: var(--bg-principal);">
+                    🔄 Reiniciar Dia
+                </button>
+            </div>
+
+            <!-- Barra de Progresso Suave -->
+            <div class="space-y-2">
+                <div class="flex justify-between text-sm font-semibold">
+                    <span>Progresso do dia</span>
+                    <span id="texto-progresso">0 de 6 concluídas</span>
+                </div>
+                <div class="w-full h-4 rounded-full overflow-hidden border" style="background-color: var(--bg-principal); border-color: var(--borda-suave);">
+                    <div id="barra-progresso" class="h-full rounded-full transition-all duration-300" style="width: 0%; background-color: var(--cor-secundaria);"></div>
+                </div>
+            </div>
+
+            <!-- Lista de Tarefas da Rotina -->
+            <div id="lista-rotina" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- Tarefas geradas via JavaScript -->
+            </div>
+
+            <!-- Mensagem de feedback calmo ao concluir todas as tarefas -->
+            <div id="mensagem-rotina-concluida" class="hidden p-4 rounded-xl border-2 text-center font-semibold" style="background-color: var(--cor-secundaria-suave); border-color: var(--cor-secundaria); color: var(--texto-principal);">
+                🌿 Muito bem! Você concluiu todas as atividades planejadas para hoje.
+            </div>
+        </section>
+
+        <!-- =================================================================
+             5. PAUSA SENSORIAL (EXERCÍCIO DE RESPIRAÇÃO GUIADA)
+             Opcional e controlado totalmente pelo usuário
+             ================================================================= -->
+        <section id="secao-pausa" aria-labelledby="titulo-pausa" class="rounded-2xl p-6 md:p-8 border-2 shadow-sm text-center space-y-6" style="background-color: var(--bg-cartao); border-color: var(--borda-suave);">
+            <div class="max-w-xl mx-auto">
+                <h2 id="titulo-pausa" class="text-2xl font-bold mb-2">
+                    Pausa Sensorial
+                </h2>
+                <p style="color: var(--texto-secundario);">
+                    Se estiver sentindo muitos estímulos ou cansaço, você pode fazer este exercício suave de respiração no seu próprio ritmo.
+                </p>
+            </div>
+
+            <!-- Área Visual do Exercício de Respiração -->
+            <div class="py-8 flex flex-col items-center justify-center space-y-8">
+                <div id="circulo-respiracao" class="circulo-respiracao" aria-hidden="true">
+                    <span class="text-3xl">🍃</span>
+                </div>
+
+                <p id="instrucao-respiracao" role="status" aria-live="polite" class="text-xl font-bold min-h-[2rem]">
+                    Clique em "Iniciar Respiração" quando estiver pronto
+                </p>
+            </div>
+
+            <!-- Botão de Controle (Iniciar / Parar) -->
+            <div>
+                <button id="btn-respiracao" type="button" 
+                        class="px-6 py-3 rounded-xl font-bold text-white text-base cursor-pointer shadow-sm"
+                        style="background-color: var(--cor-primaria);">
+                    Iniciar Respiração
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =====================================================================
+         RODAPÉ SIMPLES E INFORMATIVO
+         ===================================================================== -->
+    <footer class="border-t-2 py-6 mt-12 text-center text-sm" style="background-color: var(--bg-cartao); border-color: var(--borda-suave); color: var(--texto-secundario);">
+        <div class="max-w-5xl mx-auto px-4">
+            <p class="font-semibold mb-1">Projeto Escolar • Acessibilidade Digital e Inclusão no TEA</p>
+            <p>Desenvolvido com foco em conforto sensorial, previsibilidade e comunicação acessível.</p>
+        </div>
+    </footer>
+
+    <!-- =====================================================================
+         JAVASCRIPT: LÓGICA DE INTERATIVIDADE E ACESSIBILIDADE
+         Todo o código está comentado em português para estudo e apresentação
+         ===================================================================== -->
+    <script>
+        // Aguarda o carregamento completo da página antes de iniciar os scripts
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            /* ===============================================================
+               1. CONTROLES DA BARRA DE ACESSIBILIDADE
+               =============================================================== */
+            const htmlElement = document.documentElement;
+            const btnTema = document.getElementById('btn-tema');
+            const iconeTema = document.getElementById('icone-tema');
+            const textoTema = document.getElementById('texto-tema');
+            
+            const btnAumentarFonte = document.getElementById('btn-aumentar-fonte');
+            const btnDiminuirFonte = document.getElementById('btn-diminuir-fonte');
+            
+            const btnAnimacoes = document.getElementById('btn-animacoes');
+            const textoAnimacoes = document.getElementById('texto-animacoes');
+
+            // Variável para controlar o tamanho atual da fonte (em pixels)
+            let tamanhoFonteAtual = 16;
+
+            // Alternar entre Modo Claro Pastel e Modo Escuro Suave
+            btnTema.addEventListener('click', () => {
+                const modoEscuroAtivo = htmlElement.classList.toggle('modo-escuro');
+                btnTema.setAttribute('aria-pressed', modoEscuroAtivo);
+                
+                if (modoEscuroAtivo) {
+                    iconeTema.textContent = '☀️';
+                    textoTema.textContent = 'Modo Claro';
+                } else {
+                    iconeTema.textContent = '🌙';
+                    textoTema.textContent = 'Modo Escuro';
+                }
+            });
+
+            // Aumentar o tamanho da fonte (limite máximo de 22px para não quebrar o layout)
+            btnAumentarFonte.addEventListener('click', () => {
+                if (tamanhoFonteAtual < 22) {
+                    tamanhoFonteAtual += 2;
+                    htmlElement.style.setProperty('--tamanho-fonte-base', `${tamanhoFonteAtual}px`);
+                }
+            });
+
+            // Diminuir o tamanho da fonte (limite mínimo de 14px para manter a legibilidade)
+            btnDiminuirFonte.addEventListener('click', () => {
+                if (tamanhoFonteAtual > 14) {
+                    tamanhoFonteAtual -= 2;
+                    htmlElement.style.setProperty('--tamanho-fonte-base', `${tamanhoFonteAtual}px`);
+                }
+            });
+
+            // Desativar ou ativar transições e animações visuais
+            btnAnimacoes.addEventListener('click', () => {
+                const semAnimacoes = htmlElement.classList.toggle('sem-animacoes');
+                btnAnimacoes.setAttribute('aria-pressed', semAnimacoes);
+                
+                if (semAnimacoes) {
+                    textoAnimacoes.textContent = 'Ativar Animações';
+                } else {
+                    textoAnimacoes.textContent = 'Pausar Animações';
+                }
+            });
+
+
+            /* ===============================================================
+               2. QUADRO DE COMUNICAÇÃO ALTERNATIVA (CAA) COM SÍNTESE DE VOZ
+               =============================================================== */
+            // Lista de cartões com ícones grandes, frases claras e cores suaves
+            const cartoesCAA = [
+                { texto: 'Estou com fome', icone: '🍎', corFundo: '#FFF5F5', corBorda: '#FEB2B2' },
+                { texto: 'Estou com sede', icone: '💧', corFundo: '#EBF8FF', corBorda: '#90CDF4' },
+                { texto: 'Preciso de silêncio', icone: '🤫', corFundo: '#FAF5FF', corBorda: '#D6BCFA' },
+                { texto: 'Estou feliz', icone: '😊', corFundo: '#F0FFF4', corBorda: '#9AE6B4' },
+                { texto: 'Estou cansado', icone: '😴', corFundo: '#EDF2F7', corBorda: '#CBD5E0' },
+                { texto: 'Preciso de ajuda', icone: '🤝', corFundo: '#FFFFF0', corBorda: '#F6E05E' }
+            ];
+
+            const gradeCartoes = document.getElementById('grade-cartoes-caa');
+            const visorTexto = document.getElementById('visor-texto');
+            const visorIcone = document.getElementById('visor-icone');
+            const btnRepetirFala = document.getElementById('btn-repetir-fala');
+            
+            let fraseAtual = '';
+
+            // Função que utiliza a Web Speech API nativa do navegador para falar em Português
+            function falarTexto(texto) {
+                // Verifica se o navegador suporta síntese de voz
+                if ('speechSynthesis' in window) {
+                    // Cancela qualquer fala anterior que ainda esteja tocando
+                    window.speechSynthesis.cancel();
+
+                    const mensagem = new SpeechSynthesisUtterance(texto);
+                    mensagem.lang = 'pt-BR'; // Define o idioma para Português do Brasil
+                    mensagem.rate = 0.95;    // Velocidade levemente mais calma e clara
+                    mensagem.pitch = 1.0;    // Tom natural
+
+                    window.speechSynthesis.speak(mensagem);
+                }
+            }
+
+            // Cria os botões dos cartões dinamicamente na tela
+            cartoesCAA.forEach((cartao) => {
+                const botao = document.createElement('button');
+                botao.type = 'button';
+                botao.className = 'cartao-sensorial rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-3 cursor-pointer shadow-sm';
+                
+                // Conteúdo visual do cartão (Ícone grande + Texto legível)
+                botao.innerHTML = `
+                    <span class="text-5xl mb-1" aria-hidden="true">${cartao.icone}</span>
+                    <span class="text-lg font-bold">${cartao.texto}</span>
+                `;
+
+                // Evento de clique no cartão
+                botao.addEventListener('click', () => {
+                    fraseAtual = cartao.texto;
+                    visorTexto.textContent = cartao.texto;
+                    visorIcone.textContent = cartao.icone;
+                    btnRepetirFala.disabled = false;
+
+                    // Lê a frase em voz alta
+                    falarTexto(cartao.texto);
+                });
+
+                gradeCartoes.appendChild(botao);
+            });
+
+            // Botão para repetir a última frase selecionada
+            btnRepetirFala.addEventListener('click', () => {
+                if (fraseAtual) {
+                    falarTexto(fraseAtual);
+                }
+            });
+
+
+            /* ===============================================================
+               3. ROTINA DIÁRIA INTERATIVA
+               =============================================================== */
+            const tarefasIniciais = [
+                { id: 1, texto: 'Acordar e arrumar a cama', icone: '🌅', concluida: false },
+                { id: 2, texto: 'Tomar café da manhã', icone: '🥣', concluida: false },
+                { id: 3, texto: 'Estudar e fazer atividades', icone: '📚', concluida: false },
+                { id: 4, texto: 'Almoçar com calma', icone: '🍽️', concluida: false },
+                { id: 5, texto: 'Descansar e brincar', icone: '🧩', concluida: false },
+                { id: 6, texto: 'Escovar os dentes e dormir', icone: '🛌', concluida: false }
+            ];
+
+            // Clona o array inicial para controlar o estado das tarefas
+            let tarefas = JSON.parse(JSON.stringify(tarefasIniciais));
+
+            const listaRotina = document.getElementById('lista-rotina');
+            const textoProgresso = document.getElementById('texto-progresso');
+            const barraProgresso = document.getElementById('barra-progresso');
+            const mensagemConcluida = document.getElementById('mensagem-rotina-concluida');
+            const btnReiniciarRotina = document.getElementById('btn-reiniciar-rotina');
+
+            // Função para renderizar a lista de tarefas e atualizar a barra de progresso
+            function atualizarRotina() {
+                listaRotina.innerHTML = '';
+                let concluidasCount = 0;
+
+                tarefas.forEach((tarefa) => {
+                    if (tarefa.concluida) concluidasCount++;
+
+                    const item = document.createElement('button');
+                    item.type = 'button';
+                    item.setAttribute('aria-pressed', tarefa.concluida);
+                    item.className = 'w-full p-4 rounded-xl border-2 flex items-center justify-between gap-3 text-left cursor-pointer transition-colors';
+                    
+                    // Aplica cores suaves diferentes se a tarefa estiver concluída ou pendente
+                    if (tarefa.concluida) {
+                        item.style.backgroundColor = 'var(--cor-secundaria-suave)';
+                        item.style.borderColor = 'var(--cor-secundaria)';
+                    } else {
+                        item.style.backgroundColor = 'var(--bg-principal)';
+                        item.style.borderColor = 'var(--borda-suave)';
+                    }
+
+                    item.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl" aria-hidden="true">${tarefa.icone}</span>
+                            <span class="font-semibold ${tarefa.concluida ? 'line-through opacity-80' : ''}">
+                                ${tarefa.texto}
+                            </span>
+                        </div>
+                        <span class="w-7 h-7 rounded-lg border-2 flex items-center justify-center font-bold text-sm"
+                              style="border-color: ${tarefa.concluida ? 'var(--cor-secundaria)' : 'var(--borda-suave)'}; background-color: var(--bg-cartao);">
+                            ${tarefa.concluida ? '✓' : ''}
+                        </span>
+                    `;
+
+                    // Alterna o estado da tarefa ao clicar
+                    item.addEventListener('click', () => {
+                        tarefa.concluida = !tarefa.concluida;
+                        atualizarRotina();
+                    });
+
+                    listaRotina.appendChild(item);
+                });
+
+                // Atualiza texto e largura da barra de progresso
+                const total = tarefas.length;
+                const porcentagem = Math.round((concluidasCount / total) * 100);
+                
+                textoProgresso.textContent = `${concluidasCount} de ${total} concluídas`;
+                barraProgresso.style.width = `${porcentagem}%`;
+
+                // Mostra mensagem acolhedora quando todas as tarefas forem concluídas
+                if (concluidasCount === total) {
+                    mensagemConcluida.classList.remove('hidden');
+                } else {
+                    mensagemConcluida.classList.add('hidden');
+                }
+            }
+
+            // Botão para desmarcar todas as tarefas e reiniciar o dia
+            btnReiniciarRotina.addEventListener('click', () => {
+                tarefas.forEach(t => t.concluida = false);
+                atualizarRotina();
+            });
+
+            // Inicializa a visualização da rotina
+            atualizarRotina();
+
+
+            /* ===============================================================
+               4. PAUSA SENSORIAL (EXERCÍCIO DE RESPIRAÇÃO GUIADA)
+               =============================================================== */
+            const btnRespiracao = document.getElementById('btn-respiracao');
+            const circuloRespiracao = document.getElementById('circulo-respiracao');
+            const instrucaoRespiracao = document.getElementById('instrucao-respiracao');
+
+            let respiracaoAtiva = false;
+            let temporizadorRespiracao = null;
+
+            // Ciclo de respiração calma: 4s inspirar -> 2s segurar -> 4s expirar
+            function executarCicloRespiracao() {
+                if (!respiracaoAtiva) return;
+
+                // Passo 1: Inspirar (4 segundos)
+                instrucaoRespiracao.textContent = 'Inspire devagar pelo nariz... (4s)';
+                circuloRespiracao.className = 'circulo-respiracao inspirar';
+
+                temporizadorRespiracao = setTimeout(() => {
+                    if (!respiracaoAtiva) return;
+
+                    // Passo 2: Segurar suavemente (2 segundos)
+                    instrucaoRespiracao.textContent = 'Segure suavemente... (2s)';
+                    circuloRespiracao.className = 'circulo-respiracao segurar';
+
+                    temporizadorRespiracao = setTimeout(() => {
+                        if (!respiracaoAtiva) return;
+
+                        // Passo 3: Expirar (4 segundos)
+                        instrucaoRespiracao.textContent = 'Solte o ar devagar pela boca... (4s)';
+                        circuloRespiracao.className = 'circulo-respiracao expirar';
+
+                        // Reinicia o ciclo após expirar
+                        temporizadorRespiracao = setTimeout(() => {
+                            executarCicloRespiracao();
+                        }, 4000);
+
+                    }, 2000);
+                }, 4000);
+            }
+
+            // Controla o início e a parada do exercício pelo usuário
+            btnRespiracao.addEventListener('click', () => {
+                respiracaoAtiva = !respiracaoAtiva;
+
+                if (respiracaoAtiva) {
+                    btnRespiracao.textContent = 'Parar Respiração';
+                    btnRespiracao.style.backgroundColor = '#E53E3E'; // Vermelho suave para parar
+                    executarCicloRespiracao();
+                } else {
+                    clearTimeout(temporizadorRespiracao);
+                    btnRespiracao.textContent = 'Iniciar Respiração';
+                    btnRespiracao.style.backgroundColor = 'var(--cor-primaria)';
+                    circuloRespiracao.className = 'circulo-respiracao';
+                    instrucaoRespiracao.textContent = 'Exercício pausado. Tudo no seu tempo.';
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>
